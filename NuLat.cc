@@ -32,6 +32,9 @@
 #include "QGSP_BERT_HP.hh"
 #include "G4StepLimiterPhysics.hh"
 #include "G4OpticalPhysics.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4DecayPhysics.hh"
+#include "G4RadioactiveDecayPhysics.hh"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -51,7 +54,9 @@ using namespace std;
 
 /*******************************************/
 /*    int main( int argc, char** argv )    */
-/*    This is where the simulation begins.  The random number generator is initialized                 */
+/*    This is where the simulation begins. */
+/*    The random number generator is       */
+/*    initialized                          */
 /*******************************************/
 int main( int argc, char** argv )
 {
@@ -133,6 +138,9 @@ G4Random::setTheSeed(myseed);
   physicsList->SetVerboseLevel(0);
   G4HadronicProcessStore::Instance()->SetVerbose(0);
   physicsList->RegisterPhysics(new G4OpticalPhysics(0));
+  physicsList->RegisterPhysics(new G4EmStandardPhysics(0));
+  physicsList->RegisterPhysics(new G4DecayPhysics(0));
+  physicsList->RegisterPhysics(new G4RadioactiveDecayPhysics(0));
   runManager->SetUserInitialization(physicsList);
   
 
@@ -142,7 +150,6 @@ G4Random::setTheSeed(myseed);
 
   runManager->SetUserInitialization(new NuLatActionInitialization(numOfVoxelsInX, numOfVoxelsInY, numOfVoxelsInZ));
 
-
   /*****************************************************/
   /* If Visualization support exists Create visManager */
   /*****************************************************/
@@ -150,15 +157,14 @@ G4Random::setTheSeed(myseed);
     G4VisManager* visManager = new G4VisExecutive;
     visManager->Initialize();
 
-
-
-
   /*****************************************************/
   /* Get the pointer to the User Interface manager     */
   /*****************************************************/
   G4UImanager * UImanager = G4UImanager::GetUIpointer();  
 
-
+	// Strings for commands and macros to apply to UImanager
+	G4String cmd = "/control/execute ";
+	G4String mac = "Macros/init_vis.mac";
 
   if (argc>1)   // batch mode  
   {
@@ -166,16 +172,12 @@ G4Random::setTheSeed(myseed);
     /* Run in batch mode by having the user interface manager  */
     /* executing the macro file passed via the command line    */
     /***********************************************************/
-
-    UImanager->ApplyCommand((G4String)"/control/execute "+(G4String)argv[1]);
+	mac = argv[1];
+    UImanager->ApplyCommand(cmd+mac);
   }
   else         // interactive mode : define UI session
   {
-//    runManager->Initialize();
-
-
-
-    UImanager->ApplyCommand("/control/execute Macros/init_vis.mac");
+    UImanager->ApplyCommand(cmd+mac);
     ui->SessionStart();
     delete ui;
   }
