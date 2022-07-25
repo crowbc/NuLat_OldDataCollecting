@@ -26,11 +26,9 @@ NuLatRunAction::NuLatRunAction()
     << "Using " << analysisManager->GetType() 
     << G4endl << G4endl;
 
-
-
   //Setting FileName and verbose level
   analysisManager->SetVerboseLevel(1);
-  analysisManager->SetFileName("NuLatOutput");
+  analysisManager->SetFileName("NuLatOutput.csv");
 
 
 

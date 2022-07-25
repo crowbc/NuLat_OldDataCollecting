@@ -4,12 +4,35 @@
 #define NuLatDetectorConstruction_H 1
 
 #include "globals.hh"
-#include "G4VUserDetectorConstruction.hh"
-#include "G4RotationMatrix.hh"
-#include "Materials.hh"
-
 #include <vector>
 
+#include "G4LogicalVolume.hh"
+#include "G4VUserDetectorConstruction.hh"
+#include "G4RotationMatrix.hh"
+#include "G4SDManager.hh"
+#include "G4PVPlacement.hh"
+//Header file to create many copied volumes
+#include "G4PVParameterised.hh"
+//Geant4 header files for making shapes
+#include "G4Box.hh"
+#include "G4Trd.hh"
+#include "G4Cons.hh"
+#include "G4Tubs.hh"
+#include "G4Sphere.hh"
+#include "G4IntersectionSolid.hh"
+//Geant4 header file for cutting chunks out of a shape
+#include "G4SubtractionSolid.hh"
+//Header file for creating region that collects data
+#include "G4VSensitiveDetector.hh"
+//Header files for setting attributes in visualization
+#include "G4VisAttributes.hh"
+#include "G4Colour.hh"
+//New Material Properties (added 2/7/22)
+#include "G4LogicalBorderSurface.hh"
+#include "G4LogicalSkinSurface.hh"
+#include "G4OpticalSurface.hh"
+
+#include "Materials.hh"
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -58,8 +81,9 @@ class NuLatDetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* experimentalHallLog;
 
     G4LogicalVolume* HamamatsuR10533();
-    G4LogicalVolume* LightGuideAndPMT(G4double dx1, G4double dx2, G4double dy1, G4double dy2, G4double dz);
+    G4LogicalVolume* LightGuideAndPMT(G4double dx1, G4double dx2, G4double dy1, G4double dy2, G4double dz, G4bool instrumented);
     G4LogicalVolume* LightGuideAndPMTLog;
+    G4LogicalVolume* LightGuideAndPMTLog_noPMTs;
     G4LogicalVolume* NuLatLightGuideZBankPlusLogical;
     G4LogicalVolume* NuLatLightGuideZBankMinusLogical;
     G4LogicalVolume* NuLatLightGuideYBankPlusLogical;
@@ -72,29 +96,17 @@ class NuLatDetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* lightGuideTrdIntersLightGuideConeLog;
     G4LogicalVolume* lightGuideSquareLog;
     G4LogicalVolume* PMTLog;
-
-
-
+    G4LogicalVolume* dividers_Log;
+    G4LogicalVolume* dividers_inner_Log;
     G4LogicalVolume* VoxelLogical;
     
-    G4int nOfVoxelsInX;
-    G4int nOfVoxelsInY;
-    G4int nOfVoxelsInZ;
-    G4int photoCathodeIDNum;
-
-    G4double voxelXDimension;
-    G4double voxelYDimension;
-    G4double voxelZDimension;
+    // Parameter variable declarations
+    G4int nOfVoxelsInX, nOfVoxelsInY, nOfVoxelsInZ, photoCathodeIDNum;
     
-    G4double voxelSpacingXDimension;
-    G4double voxelSpacingYDimension;
-    G4double voxelSpacingZDimension;
-    
-    G4double PMTLength;
-    G4double LightGuideTaperLength;
-    G4double LightGuideSquareLength;
-    G4double lightGuideWithPMTLength;
-
+    // Dimension variable declarations
+    G4double voxelXDimension, voxelYDimension, voxelZDimension;    
+    G4double voxelSpacingXDimension, voxelSpacingYDimension, voxelSpacingZDimension;
+    G4double  PMTLength, LightGuideTaperLength, LightGuideSquareLength, lightGuideWithPMTLength;
 
     /********************************/
     /* Physical Volume Declerations */
